@@ -1,4 +1,4 @@
-import { createConnection } from './services/db';
+import { createConnection, appDataSource } from './services/db';
 import app from './app';
 
 // database connection

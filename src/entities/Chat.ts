@@ -15,7 +15,7 @@ export class Chat extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id : string;
 
-  @Column({type: 'varchar', length: 40})
+  @Column({type: 'varchar', length: 20})
   chatName : string;
 
   @Column({type: 'varchar', length: 80})
@@ -24,7 +24,7 @@ export class Chat extends BaseEntity {
   @Column({type: 'varchar', length: 80})
   botRole : string;
 
-  @Column({type: 'varchar', length: 200})
+  @Column({type: 'varchar', length: 250})
   context : string;
 
   @Column({type: 'timestamp'})
