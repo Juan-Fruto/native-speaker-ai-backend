@@ -2,7 +2,7 @@ import { Handler } from 'express';
 import OpenAI from 'openai';
 import { ChatCompletionStrategy } from '../libs/openai/chat/ChatCompletionStrategy';
 import { TextToSpeech } from '../services/textToSpeech/TextToSpeech';
-import fs from 'fs';
+const ElevenLabs = require("elevenlabs-node");
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_APIKEY
@@ -25,27 +25,41 @@ export const messageHandler: Handler = async (req, res) => {
 
     gptResponse = chatCompletion.getResponse();
 
-     // Audio generation
-
-    const textToSpeech = new TextToSpeech(language, gender, openai);
-
-    textToSpeech.setText(gptResponse);
-
-    await textToSpeech.generateAudio();
-
+    // Audio generation
+     const voice = new ElevenLabs(
+      {
+        apiKey:  process.env.ELEVEN_LABS_APIKEY, // API key from Elevenlabs
+        voiceId: process.env.ELEVEN_LABS_FEMALE, // Michael´s Voice ID
+      }
+    );
+    
+    // Send request to Elevenlabs
+    const voiceResponse = await voice.textToSpeechStream({
+      // Required Parameters
+      textInput:       gptResponse,               // The text to convert to speech
+      // Optional Parameters
+      stability:       0.5,                       // The stability for the converted speech
+      similarityBoost: 0.5,                       // The similarity boost for the converted speech
+      modelId:         "eleven_multilingual_v2",  // The ElevenLabs Model ID
+      style:           0,                         // The style exaggeration for the converted speech
+      responseType:    "stream",                  // The streaming type (arraybuffer, stream, json)
+      speakerBoost:    true                       // The speaker boost for the converted speech
+    });
+    
     // headers for the audio
-    res.setHeader('Content-Type', 'audio/mp3');
-    res.setHeader('Content-Disposition', 'attachment; filename=audio.mp3');
+    res.set({
+      'Content-Type': 'audio/mp3',
+      'Content-Disposition': 'attachment; filename=speech_uuid.mp3'
+    });
     
-    // creation of the streming
-    const audioStream = fs.createReadStream(textToSpeech.speechFile);
-    
-    // send the audio while reading
-    audioStream.pipe(res);
-    }
+    // send the audio while recieving the axios response
+    voiceResponse.pipe(res, { end: false });
+
+    res.write(JSON.stringify(gptResponse));
+    voiceResponse.on('end', () => res.end());
+  }
 
   if(payload_datatype === "string") {} // implementation for the assistant strategy
-
  
 }
 

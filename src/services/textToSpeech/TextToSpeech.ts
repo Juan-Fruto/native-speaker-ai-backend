@@ -4,6 +4,7 @@ import OpenAI from "openai";
 import { randomUUID } from 'crypto';
 import { Language, Gender } from './voices/voiceTypes';
 import Voice, { IVoice } from './voices/Voice';
+const ElevenLabs = require("elevenlabs-node");
 
 export class TextToSpeech {
   private openai: OpenAI;
@@ -17,38 +18,36 @@ export class TextToSpeech {
     this.openai = openai;
     this.gender = gender;
     this.speechFile = path.resolve(`./src/temp/chat/audio/${this.uniqueFileName()}`);
-
-    this.configureVoice();
-  }
-
-  private configureVoice(): void {
-    // 15 languages
-    let lang : IVoice;
-    if(this.language == "arabic") lang = new Voice.English(this.gender, this.openai)
-    
   }
 
   public setText(text: string): void {
     this.text = text;
   }
 
-  public async generateAudio(): Promise<boolean> {
-    const mp3 = await this.openai.audio.speech.create({
-      model: "tts-1",
-      voice: "alloy",
-      // input: "Hola mi nombre es Native Speaker AI! y fui creado para ayudarte a mejorar tu inglés",
-      input: this.text,
-    });
+  public async generateAudio(): Promise<void> {
+
+    const voice = new ElevenLabs(
+      {
+        apiKey:  "ae3185300a6c12e3e1ff786a523b13e7", // API key from Elevenlabs
+        voiceId: "flq6f7yk4E4fJM5XTYuZ",             // A Voice ID from Elevenlabs
+      }
+    );
+
+    const voiceResponse = await voice.textToSpeechStream({
+      // Required Parameters
+      textInput:       this.text,                // The text you wish to convert to speech
+
+      // Optional Parameters
+      voiceId:         "flq6f7yk4E4fJM5XTYuZ",         // A different Voice ID from the default
+      stability:       0.5,                            // The stability for the converted speech
+      similarityBoost: 0.5,                            // The similarity boost for the converted speech
+      modelId:         "eleven_multilingual_v2",       // The ElevenLabs Model ID
+      style:           0,                              // The style exaggeration for the converted speech
+      responseType:    "stream",                       // The streaming type (arraybuffer, stream, json)
+      speakerBoost:    true                            // The speaker boost for the converted speech
+    })
     
-    try {
-      console.log(this.speechFile);
-      const buffer = Buffer.from(await mp3.arrayBuffer());
-      await fs.promises.writeFile(this.speechFile, buffer);
-      return true
-    } catch (error) {
-      console.error('error', error);
-      return false;
-    }
+    await voiceResponse.pipe(fs.createWriteStream(this.speechFile));
   }
 
   private uniqueFileName(): string {

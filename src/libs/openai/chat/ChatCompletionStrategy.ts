@@ -28,7 +28,7 @@ export class ChatCompletionStrategy extends AbstractChatStrategy {
       max_tokens: 200
     });
 
-    console.log(completion.choices[0])
+    console.log(completion.choices[0].message)
 
     this.response = completion.choices[0].message.content;
   }

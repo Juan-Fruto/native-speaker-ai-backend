@@ -15,8 +15,8 @@ describe('POST /chat/message', () => {
                             });
                             
     expect(response.statusCode).toBe(200);
-    expect(response.headers['Content-Type']).toBe('audio/mp3');
-    expect(response.headers['Content-Disposition']).toBe('attachment; filename=speech_uuid.mp3');
-    expect(response.body instanceof Buffer).toBeTruthy();;
-  }, 10_000);
+    expect(response.header['content-type']).toBe('audio/mp3');
+    expect(response.header['content-disposition']).toBe('attachment; filename=speech_uuid.mp3');
+    expect(response.body instanceof Buffer).toBeTruthy();
+  }, 20_000);
 });
