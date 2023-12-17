@@ -2,43 +2,69 @@ import { Request, Response, NextFunction } from 'express';
 import { check, validationResult } from 'express-validator';
 
 const chatComFormatChecker = (data: any) => {
-  // check if data is an array
-  if (!Array.isArray(data)) {
-    return false;
-  }
-
-  // check the format of the objects
-  return data.every(e => (
-      typeof e === 'object' && e !== null && typeof e.role === 'string' && typeof e.content === 'string'
+  if (Array.isArray(data)) {
+    // check the format of the objects
+    return data.every(e => (
+        typeof e === 'object' && e !== null && typeof e.role === 'string' && typeof e.content === 'string'
+      )
     )
-  );
+  }
 }
 
-
-// inside the router
-export const messageValidatios = [
+export const messageArrayValidatios = [
 
   check('payload')
     .exists().withMessage('The payload has not been provided')
+    .isArray().withMessage('Invalid payload format')
     .custom((value, {req}) => {
       
-      if(chatComFormatChecker(value)){
-      
-        req.body.payload_datatype = "Array of strings";
-      
-      } else if(typeof value === "string"){
-      
-        req.body.payload_datatype = "string";
-      
-      } else{
-        
-        req.body.payload_datatype = undefined;
+      if(!chatComFormatChecker(value)){
         throw new Error('Invalid payload format');
-      
       }
 
       return true;
     }),
+  
+  (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const errors = validationResult(req);
+
+      if(!errors.isEmpty()){
+        return res.status(403).json({data: errors});
+      }
+
+      next();
+    } catch (error) {
+      res.status(403).json({data: error});
+    }
+  }
+    
+];
+
+export const messageStringValidatios = [
+
+  check('payload')
+    .exists().withMessage('The payload has not been provided')
+    .isString().withMessage('Invalid payload format'),
+  
+  (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const errors = validationResult(req);
+
+      if(!errors.isEmpty()){
+        return res.status(403).json({data: errors});
+      }
+
+      next();
+    } catch (error) {
+      res.status(403).json({data: error});
+    }
+  }
+    
+];
+
+// inside the router
+export const messageValidatios = [
 
   check('gender')
     .exists().withMessage('The geneder has not been provided')
