@@ -4,7 +4,7 @@ import { ChatCompletionStrategy } from '../libs/openai/chat/ChatCompletionStrate
 const ElevenLabs = require("elevenlabs-node");
 import {setVoice} from '../utils/setVoice';
 import { randomUUID } from 'crypto';
-import {Language} from '../services/textToSpeech/voices/voiceTypes';
+import { TLanguage } from '../services/textToSpeech/voices/voiceTypes';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_APIKEY
@@ -13,7 +13,7 @@ const openai = new OpenAI({
 export const messageArrayHandler: Handler = async (req, res) => {
 
   const { payload } = req.body; // string []
-  const { language }: { language: Language } = req.body;
+  const { language }: { language: TLanguage } = req.body;
   const { gender }: { gender: "female" | "male" }= req.body;
   let gptResponse: string;
   const voiceId = setVoice(gender);
