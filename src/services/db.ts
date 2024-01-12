@@ -4,6 +4,7 @@ import { Chat } from '../entities/Chat';
 import { Message } from '../entities/Message';
 import { MessageOrigin } from '../entities/MessageOrigin';
 import { Advice } from '../entities/Advice';
+import { Language } from "../entities/Language"; 
 import 'dotenv/config';
 
 export const appDataSource = new DataSource({
@@ -13,12 +14,12 @@ export const appDataSource = new DataSource({
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  entities: [User, Chat, Message, MessageOrigin, Advice], // tables
+  entities: [User, Chat, Message, MessageOrigin, Advice, Language], // tables
   synchronize: true,
   logging: false // show the queries in the console
 });
 
-export const createConnection = async () => {
+export const createDBConnection = async () => {
   try {
     await appDataSource.initialize();
     console.log(`connected to the ${process.env.DB_NAME}`)

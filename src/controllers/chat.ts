@@ -40,7 +40,7 @@ export const messageArrayHandler: Handler = async (req, res) => {
     // optional Parameters
     stability:       0.5,                       // the stability for the converted speech
     similarityBoost: 0.5,                       // the similarity boost for the converted speech
-    modelId:         language == "english" ? "eleven_turbo_v2": "eleven_multilingual_v2",  // the ElevenLabs Model ID
+    modelId:         (language == "english") ? "eleven_turbo_v2": "eleven_multilingual_v2", // the ElevenLabs Model ID
     style:           0,                         // the style exaggeration for the converted speech
     responseType:    "stream",                  // the streaming type (arraybuffer, stream, json)
     speakerBoost:    true                       // the speaker boost for the converted speech

@@ -1,8 +1,12 @@
-import { createConnection, appDataSource } from './services/db';
+import { createDBConnection, appDataSource } from './services/db';
+import {createRedisConnection} from './services/redis';
 import app from './app';
 
 // database connection
-createConnection();
+createDBConnection();
+
+// redis connection
+createRedisConnection();
 
 // run server
 app.listen(app.get('PORT'), () => console.log('Running on port ' + app.get('PORT')));

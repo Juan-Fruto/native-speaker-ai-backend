@@ -24,6 +24,7 @@
     "fetch": "^1.1.0",
     "mysql2": "^3.6.1",
     "openai": "^4.19.0",
+    "redis": "^4.6.12",
     "reflect-metadata": "^0.1.13",
     "typeorm": "^0.3.17"
   },

@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Request, Response, NextFunction, Router } from 'express';
 import { 
   messageArrayHandler,
   messageStringHandler,
@@ -13,7 +13,13 @@ import {
 
 const router = Router();
 
-router.post('/message_array', messageValidatios, messageArrayValidatios, messageArrayHandler);
+router.post('/message_array',
+// (req: Request, res: Response, next: NextFunction) => {
+//   console.log(req.headers);
+//   console.log(req.body);
+//   next();
+// },
+messageValidatios, messageArrayValidatios, messageArrayHandler);
 
 router.post('/message_string', messageValidatios, messageStringValidatios, messageStringHandler);
 
