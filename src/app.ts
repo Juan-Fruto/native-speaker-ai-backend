@@ -17,8 +17,8 @@ app.use(morgan('dev'));
 
 // routes
 
-app.use('/', indexRouter);
-app.use('/chat', chatRouter);
+app.use('/api/v1/', indexRouter);
+app.use('/api/v1/chat', chatRouter);
 app.use((req, res) => res.status(404).json({messge: 'source not found'}));
 
 // global variables
