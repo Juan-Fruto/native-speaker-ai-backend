@@ -10,4 +10,6 @@ module.exports = {
   setupFiles: [
     './tests/setupTests.ts'
   ],
+  globalSetup: "C:/Users/juan_/OneDrive/Desktop/Node JS/native-speaker-ai/backend/node_modules/@databases/mysql-test/jest/globalSetup",
+  globalTeardown: "C:/Users/juan_/OneDrive/Desktop/Node JS/native-speaker-ai/backend/node_modules/@databases/mysql-test/jest/globalTeardown",
 };

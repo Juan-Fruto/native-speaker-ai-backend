@@ -25,7 +25,7 @@ export class ChatCompletionStrategy extends AbstractChatStrategy {
     const completion = await AbstractChatStrategy.openai.chat.completions.create({
       messages: this.payload,
       model: this.model,
-      max_tokens: 6
+      max_tokens: 50 // 6 for tests
     });
 
     console.log(completion.choices[0].message)

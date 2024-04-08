@@ -134,11 +134,11 @@ export const messageValidatios = [
       const errors = validationResult(req);
       
       if(!errors.isEmpty()){
-        errors.array().forEach((err) => {
+        for(const err of errors.array()) {
           if(err.msg == 'Server error'){
            return res.status(503).json({data: errors});
           }
-        });
+        };
 
         return res.status(403).json({data: errors});
       }

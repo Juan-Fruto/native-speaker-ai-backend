@@ -1,11 +1,22 @@
-import request from 'supertest'; 
+jest.useFakeTimers();
+
+import request from 'supertest';
 import app from '../src/app';
+import { TestHelper } from './testhelper'
+beforeAll(async () => {
+  console.log(process.env.DB_PASSWORD);
+  TestHelper.instance.setupDB();
+});
+
+afterAll(async () => {
+  TestHelper.instance.teardownTestDB();
+});
 
 // success
-describe('POST /chat/message', () => {
+describe('POST /chat/message_array', () => {
   test('Return an audio file', async () => {
     const response = await request(app)
-                            .post('/chat/message')
+                            .post('/chat/message_array')
                             .send({
                               payload: [
                                 {role: "system", content: "Your name is 'Native Speaker AI'"},
@@ -22,29 +33,36 @@ describe('POST /chat/message', () => {
   }, 20_000);
 });
 
-// failure due to bad payload format
-describe('POST /chat/message', () => {
+// failure due to bad body format
+describe('POST /chat/message_array', () => {
   test('Return an audio file', async () => {
     const response = await request(app)
-                            .post('/chat/message')
+                            .post('/chat/message_array')
                             .send({
                               payload: 20,
-                              language: "english",
-                              gender: "female"
+                              language: "eng",
+                              gender: "women"
                           });
                             
     expect(response.statusCode).toBe(403);
     expect(response.body).toBe({
       "data": {
-          "errors": [
-              {
-                  "type": "field",
-                  "value": 20,
-                  "msg": "Invalid payload format",
-                  "path": "payload",
-                  "location": "body"
-              }
-          ]
+        "errors": [
+          {
+              "type": "field",
+              "value": "women",
+              "msg": "Invalid geneder format",
+              "path": "gender",
+              "location": "body"
+          },
+          {
+              "type": "field",
+              "value": "eng",
+              "msg": "Invalid language format",
+              "path": "language",
+              "location": "body"
+          }
+        ]
       }
   });
   }, 20_000);
