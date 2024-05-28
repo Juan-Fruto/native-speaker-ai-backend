@@ -15,3 +15,6 @@ COPY . .
 
 # build the javascript code
 RUN npm run build
+
+# start the application
+CMD ["npm", "run", "start"]
