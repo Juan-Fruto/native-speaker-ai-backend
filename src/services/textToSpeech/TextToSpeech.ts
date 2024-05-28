@@ -2,18 +2,18 @@ import fs from "fs";
 import path from "path";
 import OpenAI from "openai";
 import { randomUUID } from 'crypto';
-import { Language, Gender } from './voices/voiceTypes';
+import { TLanguage, Gender } from './voices/voiceTypes';
 import Voice, { IVoice } from './voices/Voice';
 const ElevenLabs = require("elevenlabs-node");
 
 export class TextToSpeech {
   private openai: OpenAI;
-  public language: Language;
+  public language: TLanguage;
   private gender: Gender;
   public speechFile: string;
   private text: string;
 
-  constructor(language: Language, gender: Gender ,openai: OpenAI) {
+  constructor(language: TLanguage, gender: Gender ,openai: OpenAI) {
     this.language = language;
     this.openai = openai;
     this.gender = gender;
