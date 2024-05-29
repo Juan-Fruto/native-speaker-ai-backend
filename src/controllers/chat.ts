@@ -49,7 +49,8 @@ export const messageArrayHandler: Handler = async (req, res) => {
   // headers for the audio
   res.set({
     'Content-Type': 'audio/mp3',
-    'Content-Disposition': `attachment; filename=speech_${randomUUID()}.mp3`
+    'Content-Disposition': `attachment; filename=speech_${randomUUID()}.mp3`,
+    'X-GPT-Response': encodeURIComponent(gptResponse)
   });
   
   // send the audio while recieving the axios response
